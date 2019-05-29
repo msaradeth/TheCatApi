@@ -13,9 +13,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
+    func removeTheCatApiDirectory() {
+        do {
+            let directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                            .appendingPathComponent(TheCatApi.subDirectory.value(), isDirectory: true)
+            try FileManager.default.removeItem(at: directoryURL)
+        }catch {
+            print("removeTheCatApiDirectory:  ", error.localizedDescription)
+        }
+    }
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+//        removeTheCatApiDirectory()
+        
+        let items = [Cat]()
+        let catService = CatService()
+        let viewModel = CatViewModel(items: items, catService: catService)
+        let vc = CatVC.initWith(title: "The Cat Api", viewModel: viewModel)
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible()
+        window?.rootViewController = UINavigationController(rootViewController: vc)
+        
         return true
     }
 
